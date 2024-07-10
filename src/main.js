@@ -32,8 +32,13 @@ class Ball {
       y: getRandom(0, this.wrapper.height),
     }
 
-    this.cords.x++
-    this.cords.y++
+    if (!(this.cords.x % this.wrapper.width)) {
+      this.cords = this.cords + (this.cords.x ? -1 : 1)
+    }
+
+    if (!(this.cords.y % this.wrapper.height)) {
+      this.cords = this.cords + (this.cords.x ? -1 : 1)
+    }
 
     setInterval(() => {
       if (this.cords.x <= 0 || this.cords.x >= this.wrapper.width) {
