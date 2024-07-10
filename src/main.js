@@ -1,8 +1,9 @@
 const canvas = document.createElement('canvas')
 const wrapperEl = document.getElementById('wrapper')
+const w = document.documentElement.clientWidth
 
-canvas.width = 400;
-canvas.height = 400;
+canvas.width = w < 400 ? 400 : w
+canvas.height = canvas.width;
 
 wrapperEl.appendChild(canvas)
 
