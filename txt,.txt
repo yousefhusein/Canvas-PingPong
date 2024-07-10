@@ -1,0 +1,5 @@
+#ball
+  left to top 90%, right 10% speed 90 px/ms acceleration 2 px/ms
+
+  @onCollision
+    !left 10% to !top 90%
