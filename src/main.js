@@ -1,92 +1,45 @@
-const canvas = document.createElement('canvas')
-const wrapperEl = document.getElementById('wrapper')
-const w = document.documentElement.clientWidth
+import Ball from "./Ball";
+import Frame from "./Frame";
 
-canvas.width = w < 400 ? w : 400
+const canvas = document.createElement("canvas");
+const wrapperEl = document.getElementById("wrapper");
+const w = document.documentElement.clientWidth;
+
+canvas.width = w < 400 ? w : 400;
 canvas.height = canvas.width;
 
-wrapperEl.appendChild(canvas)
+wrapperEl.appendChild(canvas);
 
-const ctx = canvas.getContext('2d')
+const ctx = canvas.getContext("2d");
 
-function getRandom(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+function resetCanvas() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#fdfdfd";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  return true;
 }
 
-class Ball {
-  constructor () 
-  {
-    this.size = 5
-    
-    this.wrapper = {
-      height: canvas.height - this.size * 2,
-      width: canvas.width - this.size * 2
-    }
+const frame = new Frame();
+function generateRandomHexColor() {
+  const hexCharacters = "0123456789ABCDEF";
+  let hexColor = "#";
 
-    this.velocity = {
-      x: 5,
-      y: 3
-    }
-
-    this.cords = {
-      x: getRandom(0, this.wrapper.width),
-      y: getRandom(0, this.wrapper.height),
-    }
-
-    if (!(this.cords.x % this.wrapper.width)) {
-      this.cords = this.cords + (this.cords.x ? -1 : 1)
-    }
-
-    if (!(this.cords.y % this.wrapper.height)) {
-      this.cords = this.cords + (this.cords.x ? -1 : 1)
-    }
-
-    setInterval(() => {
-      if (this.cords.x <= 0 || this.cords.x >= this.wrapper.width) {
-        this.velocity.x = this.velocity.x / -1
-      }
-      if (this.velocity.x > 0) {
-        this.cords.x++
-      }
-      else if (this.velocity.x < 0) {
-        this.cords.x--
-      }
-      this.render()
-    }, Math.abs(this.velocity.x))
-
-    setInterval(() => {
-      if (this.cords.y <= 0 || this.cords.y >= this.wrapper.height) {
-        this.velocity.y = this.velocity.y / -1
-      }
-      if (this.velocity.y > 0) {
-        this.cords.y++
-      }
-      else if (this.velocity.y < 0) {
-        this.cords.y--
-      }
-      this.render()
-    }, Math.abs(this.velocity.y))
+  for (let i = 0; i < 6; i++) {
+    const randomIndex = Math.floor(Math.random() * hexCharacters.length);
+    hexColor += hexCharacters[randomIndex];
   }
 
-  render () {
-    resetCanvas()
-    ctx.fillStyle = this.color || '#0069fd'
-    ctx.beginPath()
-    ctx.arc(this.cords.x + this.size, this.cords.y + this.size, this.size, 0, Math.PI * 2)
-    // ctx.fillRect(this.cords.x, this.cords.y, this.width, this.height)
-    score.innerText = `Pos(${this.cords.x}, ${this.cords.y}) Speed(${this.velocity.x}, ${this.velocity.y}) px/ms`
-    ctx.fill()
-    ctx.closePath()
-  }
+  return hexColor;
 }
+for (let i = 0; i < 2; i++) {
+  const ball = new Ball({
+    wrapperWidth: canvas.width,
+    wrapperHeight: canvas.height,
+    isCircle: !Math.round(Math.random()),
+    color: generateRandomHexColor(),
+  });
 
-function resetCanvas ()
-{
-  ctx.clearRect(0, 0, canvas.width, canvas.height)
-  ctx.fillStyle = '#fdfdfd'
-  ctx.fillRect(0, 0, canvas.width, canvas.height)
+  frame.onBefore = () => true;
+
+  frame.pushFrame(() => ball.move().render(ctx));
 }
-
-const ball = new Ball()
-
-ball.render()
