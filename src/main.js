@@ -39,7 +39,7 @@ for (let i = 0; i < 2; i++) {
     color: generateRandomHexColor(),
   });
 
-  frame.onBefore = () => true;
+  frame.onBefore = () => resetCanvas();
 
   frame.pushFrame(() => ball.move().render(ctx));
 }
